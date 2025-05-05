@@ -45,14 +45,14 @@ public_users.get('/', async function (req, res) {
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn', async function (req, res) {
     try {
-        // retrieve the isbn parameter from the request URL
-        const isbn = req.params.isbn;
-        // asynchronously wait for the JSON stringification
+        // asynchronously wait for the book data
         const bookJSON = await new Promise((resolve, reject) => {
+            // retrieve the isbn parameter from the request URL
+            const isbn = req.params.isbn;
             resolve(books[isbn]);
         });
 
-        // asynchronously send JSON response with formatted books data
+        // asynchronously send JSON response with book data
         res.send(bookJSON);
     } catch (err) {
         res.status(500).send("An error occurred while fetching the book.");
@@ -60,17 +60,29 @@ public_users.get('/isbn/:isbn', async function (req, res) {
 });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
-    const author = req.params.author;
+public_users.get('/author/:author', async function (req, res) {
+    try {
+        // retrieve the author parameter from the request URL
+        const author = req.params.author;
+        // asynchronously wait for the data of the book(s)
+        const booksJSON = await new Promise((resolve, reject) => {
+            // filter the books array for any book with specified author
+            const foundBooks = Object.entries(books)
+            .filter(([_, book]) => book.author === author);
+            resolve(foundBooks);
+        });
 
-    // Filter the books array for any book with specified author
-    const foundBooks = Object.entries(books)
-    .filter(([_, book]) => book.author === author);
-    res.send(foundBooks);
+        // asynchronously send JSON response with books data
+        res.send(booksJSON);
+    } catch (err) {
+        res.status(500).send("An error occurred while fetching the book(s).");
+    }
 });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
+public_users.get('/title/:title', async function (req, res) {
+    await new Promise(resolve => setTimeout(resolve, 5000));
+    
     const title = req.params.title;
 
     // Filter the books array for any book with specified title
