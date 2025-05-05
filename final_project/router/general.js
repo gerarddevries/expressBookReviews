@@ -18,7 +18,7 @@ public_users.get('/',function (req, res) {
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
-    // Retrieve the email parameter from the request URL and send the corresponding friend's details
+    // Retrieve the isbn parameter from the request URL and send the corresponding books details
     const isbn = req.params.isbn;
     res.send(books[isbn]);
 });
@@ -45,8 +45,9 @@ public_users.get('/title/:title',function (req, res) {
 
 //  Get book review
 public_users.get('/review/:isbn',function (req, res) {
-  //Write your code here
-  return res.status(300).json({message: "Yet to be implemented"});
+    // Retrieve the isbn parameter from the request URL and send the corresponding books details
+    const isbn = req.params.isbn;
+    res.send(books[isbn].reviews);
 });
 
 module.exports.general = public_users;
